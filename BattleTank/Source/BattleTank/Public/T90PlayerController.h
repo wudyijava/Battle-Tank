@@ -26,10 +26,10 @@ public:
 private:
 	//准心水平位置百分比
 	UPROPERTY(EditAnywhere)
-	int32 crosshairXLocation;
+	float crosshairXLocation = 0.5f;
 	//准心垂直位置百分比
 	UPROPERTY(EditAnywhere)
-	int32 crosshairYLocation;
+	float crosshairYLocation = 0.3333f;
 	//射线检测距离
 	UPROPERTY(EditAnywhere)
 	float lineTraceRange = 1000000;	//UE4的长度单位为cm

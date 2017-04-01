@@ -48,7 +48,7 @@ bool AT90PlayerController::GetSightRayHitLocation(FVector& hitLocation) const
 	FVector cameraWorldLocation;
 	FVector worldDirection;
 	//转换屏幕坐标在世界空间中的射线始点与方向
-	if (DeprojectScreenPositionToWorld(viewportSizeX, viewportSizeY, cameraWorldLocation, worldDirection))
+	if (DeprojectScreenPositionToWorld(screenLocation.X, screenLocation.Y, cameraWorldLocation, worldDirection))
 	{
 		GetLookVectorHitLocation(worldDirection, hitLocation);
 	}
@@ -59,12 +59,12 @@ bool AT90PlayerController::GetLookVectorHitLocation(FVector lookDirection, FVect
 	FHitResult hitResult;
 	auto startLocation = PlayerCameraManager->GetCameraLocation();
 	auto endLocation = startLocation + (lookDirection * lineTraceRange);
-	if (GetWorld()->LineTraceSingleByChannel(
+	bool hasPickup = GetWorld()->LineTraceSingleByChannel(
 		hitResult,
 		startLocation,
 		endLocation,
-		ECollisionChannel::ECC_Visibility)
-	)
+		ECollisionChannel::ECC_Visibility);
+	if (hasPickup)
 	{
 		hitLocation = hitResult.Location;
 		return true;
