@@ -8,7 +8,7 @@
 /**
  * 
  */
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), hidecategories=("Collision"))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BATTLETANK_API UT90Barrel : public UStaticMeshComponent
 {
 	GENERATED_BODY()
@@ -17,12 +17,12 @@ public:
 	void Elevate(float relativeSpeed);	//改变炮管仰角
 	
 private:
-	UPROPERTY(EditAnywhere, Category=Setup)
+	UPROPERTY(EditDefaultsOnly, Category=Setup)
 	float maxDegreesPerSecond = 10;	//每秒旋转角度
 	
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float minElevationDegrees = -5;	//最小旋转角度
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float maxElevationDegrees = 40;	//最大旋转角度
 
 };

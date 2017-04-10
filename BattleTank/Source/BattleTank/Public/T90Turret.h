@@ -8,7 +8,7 @@
 /**
  * 
  */
-UCLASS(ClassGroup=(Custom),meta=(BlueprintSpawnableComponent),hidecategories=("Collision"))
+UCLASS(ClassGroup=(Custom),meta=(BlueprintSpawnableComponent))
 class BATTLETANK_API UT90Turret : public UStaticMeshComponent
 {
 	GENERATED_BODY()
@@ -17,6 +17,6 @@ public:
 	void Azimuth(float relativeSpeed);
 	
 private:
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float maxDegreesPerSecond = 20;	//Ã¿ÃëÐý×ª½Ç¶È
 };

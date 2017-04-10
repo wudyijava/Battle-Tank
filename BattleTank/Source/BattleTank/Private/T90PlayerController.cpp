@@ -31,7 +31,7 @@ void AT90PlayerController::AimTowardsCrosshair() {
 	if (!GetControlledTank()) return;
 
 	FVector hitLocation;
-	if (GetSightRayHitLocation(hitLocation))
+	if (GetSightRayHitLocation(hitLocation) && hitLocation != FVector(0))
 	{
 		GetControlledTank()->AimAt(hitLocation);	//调用坦克的瞄准方法
 	}

@@ -25,12 +25,12 @@ public:
 	bool GetLookVectorHitLocation(FVector lookDirection, FVector &hitLocation) const;	//根据视点方向返回射线检测点坐标
 private:
 	//准心水平位置百分比
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float crosshairXLocation = 0.5f;
 	//准心垂直位置百分比
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float crosshairYLocation = 0.3333f;
 	//射线检测距离
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float lineTraceRange = 1000000;	//UE4的长度单位为cm
 };

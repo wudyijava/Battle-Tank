@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "T90.h"
 #include "AIController.h"
 #include "T90AIController.generated.h"
 
@@ -17,7 +16,4 @@ class BATTLETANK_API AT90AIController : public AAIController
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-
-	AT90* GetControlledTank() const;
-	AT90* GetPlayerTank() const;
 };
