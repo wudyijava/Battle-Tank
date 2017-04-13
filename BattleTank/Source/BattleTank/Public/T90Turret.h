@@ -17,6 +17,6 @@ public:
 	void Azimuth(float relativeSpeed);
 	
 private:
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float maxDegreesPerSecond = 20;	//Ã¿ÃëÐý×ª½Ç¶È
 };

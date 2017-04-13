@@ -16,4 +16,5 @@ class BATTLETANK_API AT90AIController : public AAIController
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	float accessRadius = 3000;	//Í¨¹ý°ë¾¶cm
 };

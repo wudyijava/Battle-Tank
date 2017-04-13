@@ -2,13 +2,11 @@
 
 #pragma once
 
-#include "T90.h"
 #include "GameFramework/PlayerController.h"
 #include "T90PlayerController.generated.h"	//必须是最后一行include语句
 
-/**
- * 
- */
+class UT90AimingComponent;
+
 UCLASS()
 class BATTLETANK_API AT90PlayerController : public APlayerController
 {
@@ -19,7 +17,10 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	AT90* GetControlledTank() const;	//const:限制类成员不能被修改
+	//定义一个蓝图事件，将瞄准组件传递到蓝图
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UT90AimingComponent *aimingComponent);
+
 	void AimTowardsCrosshair();			//移动炮管至准心方向
 	bool GetSightRayHitLocation(FVector& hitLocation) const;	//获取准心位置
 	bool GetLookVectorHitLocation(FVector lookDirection, FVector &hitLocation) const;	//根据视点方向返回射线检测点坐标

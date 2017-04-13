@@ -1,39 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
+#include "T90AimingComponent.h"
 #include "T90PlayerController.h"
 
 void AT90PlayerController::BeginPlay()
 {
 	Super::BeginPlay();	//不要遗漏
 
-	auto controlledTank = GetControlledTank();
-	if (!controlledTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player controller not possessing a tank."));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player controller possessing: %s"), *controlledTank->GetName());
-	}
+	auto aimingComponent = GetPawn()->FindComponentByClass<UT90AimingComponent>();
+	if (!aimingComponent) return;
+	FoundAimingComponent(aimingComponent);
 }
 
 void AT90PlayerController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
-}
-
-AT90* AT90PlayerController::GetControlledTank() const {
-	return Cast<AT90>(GetPawn());
-}
+} 
 
 void AT90PlayerController::AimTowardsCrosshair() {
-	if (!GetControlledTank()) return;
+	auto aimingComponent = GetPawn()->FindComponentByClass<UT90AimingComponent>();
+	if (!aimingComponent) return;
 
 	FVector hitLocation;
 	if (GetSightRayHitLocation(hitLocation) && hitLocation != FVector(0))
 	{
-		GetControlledTank()->AimAt(hitLocation);	//调用坦克的瞄准方法
+		aimingComponent->AimAt(hitLocation);	//调用坦克的瞄准方法
 	}
 }
 

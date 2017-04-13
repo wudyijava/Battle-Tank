@@ -22,3 +22,16 @@ void UT90MovementComponent::IntendTurnRight(float throttle)
 	leftTrack->SetThrottle(throttle);
 	rightTrack->SetThrottle(-throttle);
 }
+
+void UT90MovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	//不需要调用父类实现
+	auto tankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	auto aiForwardIntention = MoveVelocity.GetSafeNormal();
+	//点积获取移动量
+	auto forwardThrow = FVector::DotProduct(tankForward, aiForwardIntention);
+	IntendMoveForward(forwardThrow);	
+	//叉积的Z值映射旋转量
+	auto rightThrow = FVector::CrossProduct(aiForwardIntention, tankForward).Z;
+	IntendTurnRight(rightThrow);
+}

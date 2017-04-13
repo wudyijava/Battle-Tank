@@ -26,15 +26,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	//通过蓝图注入炮塔参数
-	UFUNCTION(BlueprintCallable, Category = Tank)
+	UFUNCTION(BlueprintCallable, Category = "Tank")
 	void SetTurretChildActor(UChildActorComponent* turretFromBP);
 
 	//通过蓝图注入炮管参数
-	UFUNCTION(BlueprintCallable, Category = Tank)
+	UFUNCTION(BlueprintCallable, Category = "Tank")
 	void SetBarrelChildActor(UChildActorComponent* barrelFromBP);
 
 	//通过蓝图注入坦克参数
-	UFUNCTION(BlueprintCallable, Category = Tank)
+	UFUNCTION(BlueprintCallable, Category = "Tank")
 	void SetTankChildActor(UChildActorComponent* tankFromBP);
 private:
 	UChildActorComponent* turret;	//存放炮塔对象
