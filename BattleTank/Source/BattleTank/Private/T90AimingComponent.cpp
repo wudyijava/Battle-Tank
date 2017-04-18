@@ -12,7 +12,7 @@ UT90AimingComponent::UT90AimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
 }
@@ -22,8 +22,26 @@ UT90AimingComponent::UT90AimingComponent()
 void UT90AimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	lastFireTime = FPlatformTime::Seconds();
 }
 
+
+void UT90AimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	//炮弹是否装填完毕（时间间隔是否足够）
+	if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds)
+	{
+		firingState = EFiringState::Reloading;
+	} 
+	else if (IsBarrelMoving())
+	{
+		firingState = EFiringState::Aiming;
+	} 
+	else
+	{
+		firingState = EFiringState::Locked;
+	}
+}
 
 void UT90AimingComponent::AimAt(FVector hitLocation)
 {
@@ -45,8 +63,8 @@ void UT90AimingComponent::AimAt(FVector hitLocation)
 	);
 	if (bHaveAimSolution)
 	{
-		auto aimDirection = outLaunchVelocity.GetSafeNormal();
-		MoveBarrelTowards(aimDirection);
+		aimDirection = outLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards();
 	}
 }
 
@@ -57,7 +75,7 @@ void UT90AimingComponent::Initialize(UT90Barrel *barrelToSet, UT90Turret * turre
 	turret = turretToSet;
 }
 
-void UT90AimingComponent::MoveBarrelTowards(FVector aimDirection)
+void UT90AimingComponent::MoveBarrelTowards()
 {
 	auto barrleRotator = barrel->GetForwardVector().Rotation();	//炮管当前角度
 	auto aimAsRotator = aimDirection.Rotation();	//目标方向角度
@@ -67,14 +85,18 @@ void UT90AimingComponent::MoveBarrelTowards(FVector aimDirection)
 	turret->Azimuth(deltaRotator.Yaw);		//炮塔控制水平旋转
 }
 
+bool UT90AimingComponent::IsBarrelMoving()
+{
+	if (!ensure(barrel)) return false;
+	auto barrelForward = barrel->GetForwardVector();
+	return barrelForward.Equals(aimDirection, 0.01f);
+}
 
 void UT90AimingComponent::Fire()
 {
 	if (!ensure(barrel && projectileBlueprint)) return;
 
-	//炮弹是否装填完毕（时间间隔是否足够）
-	bool isReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
-	if (isReloaded) {
+	if (firingState != EFiringState::Reloading) {
 		auto projectile = GetWorld()->SpawnActor<AProjectile>(
 			projectileBlueprint,	//蓝图类模板，类似Unity中的预制体
 			barrel->GetSocketLocation(FName("Projectile")),

@@ -8,7 +8,7 @@ void AT90PlayerController::BeginPlay()
 {
 	Super::BeginPlay();	//不要遗漏
 
-	auto aimingComponent = GetPawn()->FindComponentByClass<UT90AimingComponent>();
+	aimingComponent = GetPawn()->FindComponentByClass<UT90AimingComponent>();
 	if (!aimingComponent) return;
 	FoundAimingComponent(aimingComponent);
 }
@@ -19,7 +19,8 @@ void AT90PlayerController::Tick(float DeltaTime) {
 } 
 
 void AT90PlayerController::AimTowardsCrosshair() {
-	auto aimingComponent = GetPawn()->FindComponentByClass<UT90AimingComponent>();
+	//如果在这里获取aimingComponent，我使用的4.15.0版本会在打开T90_PlayerController_BP时闪退
+	//auto aimingComponent = GetPawn()->FindComponentByClass<UT90AimingComponent>();
 	if (!aimingComponent) return;
 
 	FVector hitLocation;

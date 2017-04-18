@@ -32,8 +32,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState firingState = EFiringState::Aiming;	//初始开火状态
+	EFiringState firingState = EFiringState::Reloading;	//初始开火状态
 public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 	void AimAt(FVector hitLocation);	//瞄准
 	UFUNCTION(BlueprintCallable, Category = "Firing")
@@ -46,6 +48,7 @@ public:
 private:
 	UT90Barrel *barrel = nullptr;
 	UT90Turret *turret = nullptr;
+	FVector aimDirection;			//目标方向
 	UPROPERTY(EditAnywhere, Category = "Firing")
 	float launchSpeed = 5000.0;	//初始速率为50m/s
 
@@ -55,5 +58,6 @@ private:
 	float reloadTimeInSeconds = 3;	//炮弹装填时间
 	double lastFireTime = 0;		//最近开火时间
 
-	void MoveBarrelTowards(FVector aimDirection);	//调整炮管至指定方向
+	void MoveBarrelTowards();		//调整炮管至指定方向
+	bool IsBarrelMoving();			//是否已转向目标
 };

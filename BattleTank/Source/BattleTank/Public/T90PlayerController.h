@@ -34,4 +34,7 @@ private:
 	//射线检测距离
 	UPROPERTY(EditDefaultsOnly)
 	float lineTraceRange = 1000000;	//UE4的长度单位为cm
+
+	//在BeginPlay中一次性获取，在Tick中反复使用
+	UT90AimingComponent *aimingComponent = nullptr;
 };
