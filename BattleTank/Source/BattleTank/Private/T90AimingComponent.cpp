@@ -28,8 +28,12 @@ void UT90AimingComponent::BeginPlay()
 
 void UT90AimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
+	if (roundsLeft <= 0)
+	{
+		firingState = EFiringState::OutOfAmmo;
+	}
 	//炮弹是否装填完毕（时间间隔是否足够）
-	if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds)
+	else if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds)
 	{
 		firingState = EFiringState::Reloading;
 	} 
@@ -75,6 +79,16 @@ void UT90AimingComponent::Initialize(UT90Barrel *barrelToSet, UT90Turret * turre
 	turret = turretToSet;
 }
 
+EFiringState UT90AimingComponent::GetFiringState() const
+{
+	return firingState;
+}
+
+int UT90AimingComponent::GetRoundsLeft() const
+{
+	return roundsLeft;
+}
+
 void UT90AimingComponent::MoveBarrelTowards()
 {
 	auto barrleRotator = barrel->GetForwardVector().Rotation();	//炮管当前角度
@@ -82,21 +96,29 @@ void UT90AimingComponent::MoveBarrelTowards()
 	auto deltaRotator = aimAsRotator - barrleRotator;	//角度差
 
 	barrel->Elevate(deltaRotator.Pitch);	//炮管只控制仰角
-	turret->Azimuth(deltaRotator.Yaw);		//炮塔控制水平旋转
+	//炮塔控制水平旋转
+	if (FMath::Abs<float>(deltaRotator.Yaw) < 180)
+	{
+		turret->Azimuth(deltaRotator.Yaw);
+	}
+	else
+	{
+		turret->Azimuth(-deltaRotator.Yaw);
+	}
 }
 
 bool UT90AimingComponent::IsBarrelMoving()
 {
 	if (!ensure(barrel)) return false;
 	auto barrelForward = barrel->GetForwardVector();
-	return barrelForward.Equals(aimDirection, 0.01f);
+	return !barrelForward.Equals(aimDirection, 0.01f);
 }
 
 void UT90AimingComponent::Fire()
 {
 	if (!ensure(barrel && projectileBlueprint)) return;
 
-	if (firingState != EFiringState::Reloading) {
+	if (firingState == EFiringState::Aiming || firingState == EFiringState::Locked ) {
 		auto projectile = GetWorld()->SpawnActor<AProjectile>(
 			projectileBlueprint,	//蓝图类模板，类似Unity中的预制体
 			barrel->GetSocketLocation(FName("Projectile")),
@@ -104,5 +126,6 @@ void UT90AimingComponent::Fire()
 			);						//创建炮弹
 		projectile->LaunchProjectile(launchSpeed);	//发射炮弹
 		lastFireTime = FPlatformTime::Seconds();	//更新最近开火时间
+		roundsLeft--;				//消耗一枚炮弹
 	}
 }

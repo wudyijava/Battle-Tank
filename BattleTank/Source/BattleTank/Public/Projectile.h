@@ -26,5 +26,9 @@ public:
 
 private:
 	UProjectileMovementComponent *projectileMovement = nullptr;	//抛掷组件
-	
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent *collisionMesh = nullptr;		//碰撞体组件
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent *launchBlast = nullptr;	//发射火焰粒子
 };

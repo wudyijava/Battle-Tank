@@ -16,5 +16,8 @@ class BATTLETANK_API AT90AIController : public AAIController
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	float accessRadius = 3000;	//通过半径cm
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float acceptanceRadius = 3000;	//距离目标需要移动的半径cm
 };

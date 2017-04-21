@@ -17,11 +17,14 @@ void AT90AIController::Tick(float DeltaTime)
 	auto controlledTank =GetPawn();
 
 	//向角色坦克移动
-	MoveToActor(playerTank, accessRadius);
+	MoveToActor(playerTank, acceptanceRadius);
 
 	auto t90AimingComponent = controlledTank->FindComponentByClass<UT90AimingComponent>();
 	//瞄准角色坦克
 	t90AimingComponent->AimAt(playerTank->GetActorLocation());
 	//开火
-	t90AimingComponent->Fire();
+	if (t90AimingComponent->GetFiringState() == EFiringState::Locked)
+	{
+		t90AimingComponent->Fire();
+	}
 }

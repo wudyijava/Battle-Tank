@@ -11,7 +11,8 @@ enum class EFiringState : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 class UT90Barrel;	//前置声明
@@ -23,17 +24,16 @@ class BATTLETANK_API UT90AimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UT90AimingComponent();
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState firingState = EFiringState::Reloading;	//初始开火状态
+
 public:	
+	// Sets default values for this component's properties
+	UT90AimingComponent();
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
@@ -44,6 +44,10 @@ public:
 	//设置炮塔与炮塔
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialize(UT90Barrel *barrelToSet, UT90Turret *turretToSet);
+
+	EFiringState GetFiringState() const;
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	int GetRoundsLeft() const;
 
 private:
 	UT90Barrel *barrel = nullptr;
@@ -57,6 +61,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float reloadTimeInSeconds = 3;	//炮弹装填时间
 	double lastFireTime = 0;		//最近开火时间
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int roundsLeft = 3;				//剩余弹量
 
 	void MoveBarrelTowards();		//调整炮管至指定方向
 	bool IsBarrelMoving();			//是否已转向目标

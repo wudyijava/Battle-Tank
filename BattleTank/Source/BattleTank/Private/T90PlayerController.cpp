@@ -24,7 +24,7 @@ void AT90PlayerController::AimTowardsCrosshair() {
 	if (!aimingComponent) return;
 
 	FVector hitLocation;
-	if (GetSightRayHitLocation(hitLocation) && hitLocation != FVector(0))
+	if (GetSightRayHitLocation(hitLocation))
 	{
 		aimingComponent->AimAt(hitLocation);	//调用坦克的瞄准方法
 	}
@@ -43,9 +43,9 @@ bool AT90PlayerController::GetSightRayHitLocation(FVector& hitLocation) const
 	//转换屏幕坐标在世界空间中的射线始点与方向
 	if (DeprojectScreenPositionToWorld(screenLocation.X, screenLocation.Y, cameraWorldLocation, worldDirection))
 	{
-		GetLookVectorHitLocation(worldDirection, hitLocation);
+		return GetLookVectorHitLocation(worldDirection, hitLocation);
 	}
-	return true;
+	return false;
 }
 
 bool AT90PlayerController::GetLookVectorHitLocation(FVector lookDirection, FVector &hitLocation) const {
