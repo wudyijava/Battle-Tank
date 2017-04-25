@@ -31,4 +31,15 @@ private:
 	UStaticMeshComponent *collisionMesh = nullptr;		//碰撞体组件
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UParticleSystemComponent *launchBlast = nullptr;	//发射火焰粒子
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent *impactBlast = nullptr;	//碰撞爆炸粒子
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	URadialForceComponent *explosionForce = nullptr;	//爆炸力
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float destroyDelay = 10.0f;							//爆炸粒子延时销毁时长
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void OnTimerExpire();
 };
