@@ -17,6 +17,10 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnPossedT90Death();
+	virtual void SetPawn(APawn * InPawn) override;
+
 	//定义一个蓝图事件，将瞄准组件传递到蓝图
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundAimingComponent(UT90AimingComponent *aimingComponent);

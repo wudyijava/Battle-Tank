@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "T90AimingComponent.h"
+#include "T90.h"
 #include "T90PlayerController.h"
 
 void AT90PlayerController::BeginPlay()
@@ -17,6 +18,25 @@ void AT90PlayerController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
 } 
+
+
+void AT90PlayerController::OnPossedT90Death()
+{
+	//StartSpectatingOnly();	//当被销毁时进入旁观模式（关卡有NPC坦克会闪退）
+}
+
+void AT90PlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		auto possessedTank = Cast<AT90>(InPawn);
+		if (!ensure(possessedTank)) return;
+		possessedTank->OnDeath.AddUniqueDynamic(this, &AT90PlayerController::OnPossedT90Death);
+	}
+}
+
 
 void AT90PlayerController::AimTowardsCrosshair() {
 	//如果在这里获取aimingComponent，我使用的4.15.0版本会在打开T90_PlayerController_BP时闪退

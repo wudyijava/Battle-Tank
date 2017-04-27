@@ -58,6 +58,16 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 	SetRootComponent(impactBlast);		//替换根组件为爆炸粒子（它还需播放一段时间）
 	collisionMesh->DestroyComponent();	//以删除网格物体
 
+	//伤害计算
+	UGameplayStatics::ApplyRadialDamage(
+		this,							//上下文
+		projectileDamage,				//基本破坏
+		GetActorLocation(),				//爆炸中心
+		explosionForce->Radius,			//范围半径
+		UDamageType::StaticClass(),		//波及类型
+		TArray<AActor *>()				//免疫类型
+	);
+
 	//等待destroyDelay时间后通过OnTimerExpire函数删除根物体（爆炸粒子）
 	FTimerHandle timer;
 	GetWorld()->GetTimerManager().SetTimer(timer, this, &AProjectile::OnTimerExpire, destroyDelay);

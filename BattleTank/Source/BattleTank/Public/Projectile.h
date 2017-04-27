@@ -37,6 +37,8 @@ private:
 	URadialForceComponent *explosionForce = nullptr;	//爆炸力
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float destroyDelay = 10.0f;							//爆炸粒子延时销毁时长
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float projectileDamage = 20;						//炮弹威力
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

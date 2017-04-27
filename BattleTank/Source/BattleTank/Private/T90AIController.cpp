@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "T90AimingComponent.h"
+#include "T90.h"
 #include "T90AIController.h"
 
 void AT90AIController::BeginPlay()
@@ -26,5 +27,23 @@ void AT90AIController::Tick(float DeltaTime)
 	if (t90AimingComponent->GetFiringState() == EFiringState::Locked)
 	{
 		t90AimingComponent->Fire();
+	}
+}
+
+void AT90AIController::OnPossedT90Death()
+{
+	if (ensure(!GetPawn())) return;
+	GetPawn()->DetachFromControllerPendingDestroy();	//当被销毁时脱离控制
+}
+
+void AT90AIController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	if (InPawn)
+	{
+		auto possessedTank = Cast<AT90>(InPawn);
+		if (!ensure(possessedTank)) return;
+		possessedTank->OnDeath.AddUniqueDynamic(this, &AT90AIController::OnPossedT90Death);
 	}
 }
