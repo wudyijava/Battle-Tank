@@ -76,7 +76,7 @@ bool AT90PlayerController::GetLookVectorHitLocation(FVector lookDirection, FVect
 		hitResult,
 		startLocation,
 		endLocation,
-		ECollisionChannel::ECC_Visibility);
+		ECollisionChannel::ECC_Camera);
 	if (hasPickup)
 	{
 		hitLocation = hitResult.Location;
